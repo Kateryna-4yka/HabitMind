@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HabitMind – 21 день</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <h1>План звичок на 21 день</h1>
+  <div class="container" id="cardsContainer"></div>
+
+  <script>
+    const totalDays = 21;
+    const container = document.getElementById('cardsContainer');
+
+    // ✅ Встановлення або отримання дати старту
+    let startDate = localStorage.getItem('habitStartDate');
+    if (!startDate) {
+      startDate = new Date().toISOString().split('T')[0]; // поточна дата yyyy-mm-dd
+      localStorage.setItem('habitStartDate', startDate);
+      alert(`Встановлено дату початку: ${startDate}`);
+    }
+
+    const completedDays = JSON.parse(localStorage.getItem('completedDays')) || [];
+
+    const daysPassed = Math.floor(
+      (new Date().setHours(0,0,0,0) - new Date(startDate).setHours(0,0,0,0)) / (1000 * 60 * 60 * 24)
+    );
+
+    for (let i = 0; i < totalDays; i++) {
+      const isCompleted = completedDays.includes(i);
+      const isFuture = i > daysPassed;
+
+      const card = document.createElement('div');
+      card.classList.add('card');
+      if (i === daysPassed) card.classList.add('today');
+      if (isCompleted) card.classList.add('done');
+
+      card.innerHTML = `
+        <div class="day">День ${i + 1}</div>
+        <div class="tasks">вивчити 2 терміни</div>
+        <button ${isFuture ? 'disabled' : ''} class="complete-btn">
+          ${isCompleted ? '✅ Виконано' : 'Позначити як виконано'}
+        </button>
+      `;
+
+      const button = card.querySelector('.complete-btn');
+
+      if (!isFuture && !isCompleted) {
+        button.addEventListener('click', () => {
+          completedDays.push(i);
+          localStorage.setItem('completedDays', JSON.stringify([...new Set(completedDays)]));
+          card.classList.add('done');
+          button.innerText = '✅ Виконано';
+          button.disabled = true;
+        });
+      }
+
+      container.appendChild(card);
+    }
+  </script>
+</body>
+</html>

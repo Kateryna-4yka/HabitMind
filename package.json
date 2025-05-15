@@ -1,0 +1,39 @@
+{
+  "name": "habitmind",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "lint": "eslint src/**/*.js",
+    "start": "node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kateryna-4yka/HabitMind.git"
+  },
+  "keywords": [],
+  "author": "KATERYNA_4YKA <kotasyri@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kateryna-4yka/HabitMind/issues"
+  },
+  "homepage": "https://github.com/Kateryna-4yka/HabitMind#readme",
+  "description": "",
+  "devDependencies": {
+    "@eslint/js": "^9.26.0",
+    "eslint": "^9.26.0",
+    "globals": "^16.1.0",
+    "nodemon": "^3.1.10",
+    "pino-pretty": "^13.0.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "mongoose": "^8.14.3",
+    "pin": "^0.3.0",
+    "pino": "^9.6.0",
+    "pino-http": "^10.4.0"
+  }
+}
