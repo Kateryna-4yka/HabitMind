@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>HabitMind</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>HabitMind – Звички</h1>
+
+  <div class="search-container">
+    <input type="text" id="searchById" placeholder="Пошук по ID" />
+    <button onclick="searchById()">Знайти</button>
+
+    <input type="text" id="searchByName" placeholder="Пошук по імені" />
+    <button onclick="searchByName()">Знайти</button>
+
+    <button onclick="loadAll()">Показати всі</button>
+  </div>
+
+  <div id="habitList" class="card-container"></div>
+
+  <script>
+    const API_URL = 'http://localhost:3001/habits';
+
+    async function loadAll() {
+      const res = await fetch(API_URL);
+      const data = await res.json();
+      renderCards(data.data);
+    }
+
+    async function searchById() {
+      const id = document.getElementById('searchById').value.trim();
+      if (!id) return;
+
+      const res = await fetch(`${API_URL}/${id}`);
+      const data = await res.json();
+      if (data?.data) {
+        renderCards([data.data]);
+      } else {
+        renderCards([]);
+      }
+    }
+
+    async function searchByName() {
+      const name = document.getElementById('searchByName').value.trim();
+      if (!name) return;
+
+      const res = await fetch(`${API_URL}?name=${encodeURIComponent(name)}`);
+      const data = await res.json();
+      if (data?.data) {
+        renderCards([data.data]);
+      } else {
+        renderCards([]);
+      }
+    }
+
+    function renderCards(habits) {
+      const container = document.getElementById('habitList');
+      container.innerHTML = '';
+
+      if (!habits.length) {
+        container.innerHTML = `<p>Нічого не знайдено</p>`;
+        return;
+      }
+
+      habits.forEach(habit => {
+        const card = document.createElement('div');
+        card.className = 'habit-card';
+        card.innerHTML = `
+          <p><strong>ID:</strong> ${habit._id}</p>
+          <p><strong>Ім’я:</strong> ${habit.name}</p>
+          <p><strong>Кількість днів:</strong> ${habit.tasks?.length ?? 0}</p>
+          <p><strong>Задачі:</strong></p>
+          <ul>
+            ${habit.tasks?.map(task => `
+              <li>
+                📅 ${task.date}, №${task.dayNumber},
+                ${task.completed ? '✅' : '❌'}
+              </li>`).join('') ?? ''}
+          </ul>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    loadAll(); // Показати всі одразу
+  </script>
+</body>
+</html>
